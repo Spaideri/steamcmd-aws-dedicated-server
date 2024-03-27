@@ -53,3 +53,4 @@ I'm a long time Arma fan and I love the gaming community. Everyone deserves to g
 
 ## Credits
 * Inspired by [docker-reforger](https://github.com/acemod/docker-reforger/tree/main)
+* EC2 snippets [@jlehtiniemi](https://github.com/jlehtiniemi)
