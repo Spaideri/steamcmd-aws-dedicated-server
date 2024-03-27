@@ -37,7 +37,7 @@ server_game_config = load_json_file(SERVER_GAME_CONFIG_FILE_PATH)
 default_game_config = load_json_file(DEFAULT_CONFIG_FILE_PATH)
 generated_config = recursive_merge(default_game_config, server_game_config)
 
-#
+# Combine default and optional arguments
 server_game_arguments = load_json_file(SERVER_GAME_ARGUMENTS_FILE_PATH)
 default_server_game_arguments = load_json_file(DEFAULT_GAME_ARGUMENTS_FILE_PATH)
 resolved_game_arguments = recursive_merge(default_server_game_arguments, server_game_arguments)
@@ -45,9 +45,6 @@ resolved_game_arguments = recursive_merge(default_server_game_arguments, server_
 json_game_config = json.dumps(generated_config, indent=2)
 with open(GENERATED_CONFIG_FILE_PATH, "w") as outfile:
     outfile.write(json_game_config)
-
-steamcmd = ['/usr/games/steamcmd']
-steamcmd.extend(["+force_install_dir", STEAM_FORCE_INSTALL_DIR])
 
 launch = " ".join(
     [
