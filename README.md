@@ -15,7 +15,7 @@ Do it all project to deploy your own SteamCMD dedicated servers running on top o
 * Custom CLI - simple CLI to operate servers from local machine
 
 ## 2. Supported Games
-Contributions welcome, support new games are easy to add
+Contributions welcome, new games are easy to add see [/games/arma-reforger](/games/arma-reforger) for example
 * Arma Reforger
 * Arma3 (coming soon)
 
@@ -45,12 +45,22 @@ Contributions welcome, support new games are easy to add
   * Open CloudWatch - Logs
   * See server sys.log to see server output
 
+## 5. Operating
+
+### 5.1 Start/Stop server
+* set [runServer](https://github.com/Spaideri/steamcmd-aws-dedicated-server/blob/main/config.yaml#L22) to `true` or `false`
+
+```
+cd aws-infra
+npx projen deploy --all
+```
+
 ## 6. Contributions
 Contributions are welcome
 
-## 5. Motivation
+## 7. Motivation
 I'm a long time Arma fan and I love the gaming community. Everyone deserves to get to play on well performing cost-efficient servers and this is my contribution to the community. 
 
-## Credits
+## 8. Credits
 * Inspired by [docker-reforger](https://github.com/acemod/docker-reforger/tree/main)
 * EC2 snippets [@jlehtiniemi](https://github.com/jlehtiniemi)
