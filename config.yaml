@@ -19,6 +19,7 @@ servers:
     dataVolumeSizeGB: 30
     instanceClass: c7a
     instanceSize: large
+    runServer: true
     firewallOpenings:
       - description: Game port
         protocol: udp

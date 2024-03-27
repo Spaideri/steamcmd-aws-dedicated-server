@@ -10,6 +10,7 @@ const ServerConfigurationSchema = z.object({
   dataVolumeSizeGB: z.number().min(1).max(1000),
   instanceClass: z.string(),
   instanceSize: z.string(),
+  runServer: z.boolean(),
   firewallOpenings: z.array(z.object({
     description: z.string(),
     protocol: z.string().regex(/^udp|tcp$/),
