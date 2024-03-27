@@ -1,0 +1,17 @@
+{
+  "rcon": {
+    "password": "rconsecret123"
+  },
+  "game": {
+    "name": "Steamec2 test server",
+    "password": "gamesecret123",
+    "passwordAdmin": "adminsecret123",
+    "admins" : [],
+    "scenarioId": "{DFAC5FABD11F2390}Missions/26_CombatOpsEveron.conf",
+    "mods": [{
+      "modId": "5965550F24A0C152",
+      "name": "WHERE AM I",
+      "version": "1.1.0"
+    }]
+  }
+}

@@ -1,0 +1,50 @@
+{
+  "bindAddress": "0.0.0.0",
+  "bindPort": 2001,
+  "publicPort": 2001,
+  "a2s": {
+    "address": "0.0.0.0",
+    "port": 17777
+  },
+  "rcon": {
+    "address": "0.0.0.0",
+    "port": 19999,
+    "password": "",
+    "permission": "admin",
+    "blacklist": [],
+    "whitelist": []
+  },
+  "game": {
+    "name": "SteamEc2 Arma Reforger EC2 Server",
+    "password": "",
+    "passwordAdmin": "",
+    "admins": [],
+    "scenarioId": "{DFAC5FABD11F2390}Missions/26_CombatOpsEveron.conf",
+    "maxPlayers": 32,
+    "visible": true,
+    "supportedPlatforms": [
+      "PLATFORM_PC",
+      "PLATFORM_XBL"
+    ],
+    "gameProperties": {
+      "serverMaxViewDistance": 1600,
+      "serverMinGrassDistance": 50,
+      "networkViewDistance": 1500,
+      "disableThirdPerson": false,
+      "fastValidation": true,
+      "battlEye": true,
+      "VONDisableUI": false,
+      "VONDisableDirectSpeechUI": false,
+      "VONCanTransmitCrossFaction": false,
+      "missionHeader": {
+        "m_iPlayerCount": 40,
+        "m_eEditableGameFlags": 6,
+        "m_eDefaultGameFlags": 6
+      }
+    },
+    "mods": []
+  },
+  "operating": {
+    "lobbyPlayerSynchronise": true
+  }
+}

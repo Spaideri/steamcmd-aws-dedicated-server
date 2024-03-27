@@ -1,0 +1,5 @@
+{
+  "backendlog": "-backendlog",
+  "maxFPS": "-maxFPS 120",
+  "nothrow": "-nothrow"
+}

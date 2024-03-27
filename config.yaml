@@ -1,0 +1,31 @@
+# Your AWS Account ID
+accountId: ''
+# Choose region closest to for optimal latency
+# https://aws.amazon.com/about-aws/global-infrastructure/regions_az/
+region: eu-north-1
+# EC2
+amiName: steamcmd-ubuntu-server-v1.0.0
+# input the name of the EC2 key pair you generated
+keyPairName: steamcmd-eu-north-1
+# Whitelist your public IP address to access SSH
+# https://www.google.com/search?q=what+is+my+ip
+# Replace 127.0.0.1 with your own public IP
+sshIpAddressWhitelist:
+  - 127.0.0.1
+
+servers:
+  - serverName: arma-reforger-server-01
+    game: arma-reforger
+    dataVolumeSizeGB: 30
+    instanceClass: c7a
+    instanceSize: large
+    firewallOpenings:
+      - description: Game port
+        protocol: udp
+        portNumber: 2001
+      - description: RCON
+        protocol: udp
+        portNumber: 19999
+      - description: Steam A2S
+        protocol: udp
+        portNumber: 17777
