@@ -14,6 +14,7 @@ This project creates all the necessary AWS cloud infra resources required to dep
 
 ### 1.2 CDK bootstrap
 Replace 123456789012 with your AWS account Id and eu-north-1 with the region you wish to use
+
 ```npx cdk bootstrap 123456789012/eu-north-1```
 
 ## 2. Deployment command
