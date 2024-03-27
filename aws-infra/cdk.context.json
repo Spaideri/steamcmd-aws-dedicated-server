@@ -1,8 +1,0 @@
-{
-  "availability-zones:account=684381074825:region=eu-north-1": [
-    "eu-north-1a",
-    "eu-north-1b",
-    "eu-north-1c"
-  ],
-  "ami:account=684381074825:filters.image-type.0=machine:filters.name.0=steamcmd-ubuntu-server-v0.0.5:filters.state.0=available:region=eu-north-1": "ami-0817b20ed9d27b70e"
-}
