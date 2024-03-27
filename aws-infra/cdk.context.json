@@ -4,10 +4,5 @@
     "eu-north-1b",
     "eu-north-1c"
   ],
-  "ami:account=684381074825:filters.image-type.0=machine:filters.name.0=steamcmd-ubuntu-server:filters.state.0=available:region=eu-north-1": "ami-0d944d27cfd9f3f6a",
-  "ami:account=684381074825:filters.image-type.0=machine:filters.name.0=steamcmd-ubuntu-server-v0.0.1:filters.state.0=available:region=eu-north-1": "ami-0f5fb9d3a84c07ef0",
-  "ami:account=684381074825:filters.image-type.0=machine:filters.name.0=steamcmd-ubuntu-server-v0.0.2:filters.state.0=available:region=eu-north-1": "ami-0b4706d6bd4cfa28d",
-  "ami:account=684381074825:filters.image-type.0=machine:filters.name.0=steamcmd-ubuntu-server-v0.0.3:filters.state.0=available:region=eu-north-1": "ami-034df6f8936404e7b",
-  "ami:account=684381074825:filters.image-type.0=machine:filters.name.0=steamcmd-ubuntu-server-v0.0.4:filters.state.0=available:region=eu-north-1": "ami-02f16c9373253ba87",
   "ami:account=684381074825:filters.image-type.0=machine:filters.name.0=steamcmd-ubuntu-server-v0.0.5:filters.state.0=available:region=eu-north-1": "ami-0817b20ed9d27b70e"
 }
