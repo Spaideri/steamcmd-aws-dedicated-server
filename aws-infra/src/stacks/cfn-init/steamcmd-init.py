@@ -1,7 +1,10 @@
 import json
 import os
+import sys
 
-STEAMCMD_CONFIG_FILE_PATH = "/data/{}/steamcmd.config.json".format(os.environ["SERVER_NAME"])
+SERVER_NAME = sys.argv[1]
+GAME_NAME = sys.argv[2]
+STEAMCMD_CONFIG_FILE_PATH = f"/data/{SERVER_NAME}/steamcmd.config.json"
 
 def load_json_file(path):
     f = open(path)
@@ -11,9 +14,10 @@ def load_json_file(path):
 
 steamcmd_config = load_json_file(STEAMCMD_CONFIG_FILE_PATH)
 
+print("steamcmd-init.py START")
 print(steamcmd_config)
 
-STEAM_FORCE_INSTALL_DIR = "/data/{}/{}".format(steamcmd_config['serverName'], steamcmd_config['gameName'])
+STEAM_FORCE_INSTALL_DIR = f"/data/{SERVER_NAME}/{GAME_NAME}"
 
 steamcmd = ['/usr/games/steamcmd']
 steamcmd.extend(["+force_install_dir", STEAM_FORCE_INSTALL_DIR])
@@ -31,5 +35,6 @@ if "steamBranchPassword" in steamcmd_config:
 
 steamcmd.extend(["validate", "+quit"])
 init_command = " ".join(steamcmd)
-print(init_command)
+print(f"Running steamcmd: {init_command}")
 os.system(init_command)
+print("steamcmd-init COMPLETE")

@@ -250,7 +250,7 @@ export class ServerEc2Stack extends Stack {
       vpc,
       launchTemplate: this.launchTemplate,
       cooldown: Duration.minutes(1),
-      healthCheck: HealthCheck.ec2({ grace: Duration.minutes(7) }),
+      healthCheck: HealthCheck.ec2({ grace: Duration.minutes(20) }),
       desiredCapacity: runServer ? 1 : 0,
       maxCapacity: 1,
       minCapacity: 0,
@@ -258,7 +258,7 @@ export class ServerEc2Stack extends Stack {
         availabilityZones: [`${region}a`],
         subnetType: SubnetType.PUBLIC,
       },
-      signals: Signals.waitForAll({ minSuccessPercentage: 0, timeout: Duration.minutes(7) }),
+      signals: Signals.waitForAll({ minSuccessPercentage: 0, timeout: Duration.minutes(20) }),
       updatePolicy: UpdatePolicy.rollingUpdate({}),
     });
     userData.addSignalOnExitCommand(this.autoScalingGroup);
@@ -401,6 +401,9 @@ export class ServerEc2Stack extends Stack {
           ),
         ]),
         steamCmdInit: new InitConfig([
+          InitCommand.shellCommand(`mkdir -p /data/${serverName} && chown -R ubuntu:ubuntu /data/${serverName}`, {
+            key: '01-server-directory',
+          }),
           InitFile.fromFileInline(`${SERVER_BASE_PATH}/steamcmd-init.py`, `${LOCAL_CFN_INIT_FILES_BASE}/steamcmd-init.py`, {
             group: 'ubuntu',
             owner: 'ubuntu',
@@ -412,13 +415,13 @@ export class ServerEc2Stack extends Stack {
             mode: '000744',
           }),
           InitCommand.shellCommand(`mkdir -p /data/${serverName}/workshop && chown -R ubuntu:ubuntu /data/${serverName}/workshop`, {
-            key: '01-steam-workshop-directory',
+            key: '02-steam-workshop-directory',
           }),
-          InitCommand.shellCommand(`runuser -u ubuntu -- python3 /data/${serverName}/steamcmd-init.py`, {
-            env: {
-              SERVER_NAME: serverName,
-            },
-            key: '02-steam-cmd-init',
+          InitCommand.shellCommand(`mkdir -p /data/${serverName}/${game} && chown -R ubuntu:ubuntu /data/${serverName}/${game}`, {
+            key: '03-game-install-directory',
+          }),
+          InitCommand.shellCommand(`runuser -u ubuntu -- python3 /data/${serverName}/steamcmd-init.py ${serverName} ${game}`, {
+            key: '04-steam-cmd-init',
           }),
         ]),
         launchGame: new InitConfig([
