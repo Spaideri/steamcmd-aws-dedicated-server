@@ -20,21 +20,22 @@ Contributions welcome, new games are easy to add see [/games/arma-reforger](/gam
 * Arma3 (coming soon)
 
 ## 3. Prerequisites
-* AWS Account
-* AWS IAM User with AdminAccess
-* AWS Access Keys configured
-* NodeJS installed
-* Packer installed
+* [Create AWS Account](https://docs.aws.amazon.com/accounts/latest/reference/welcome-first-time-user.html)
+* [Create AWS IAM User with AdminAccess](https://docs.aws.amazon.com/singlesignon/latest/userguide/quick-start-default-idc.html)
+* [Setup AWS CLI Credentials](https://docs.aws.amazon.com/singlesignon/latest/userguide/howtogetcredentials.html)
+* [Install NodeJS](https://nodejs.org/en/download)
+* [Install Packer](https://developer.hashicorp.com/packer/tutorials/docker-get-started/get-started-install-cli)
 
 ## 4. Deployment steps
 * Build image from [server-image](/server-image)
-* Generate AWS EC2 key pair to your own region
+* [Create a EC2 key pair](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/create-key-pairs.html) and record the name of the key pair
 * Update [config.yaml](/config.yaml)
-  * set awsAccountId
-  * set region
+  * set awsAccountId - [AWS AccountId](https://docs.aws.amazon.com/accounts/latest/reference/manage-acct-identifiers.html)
+  * set region - [AWS Region](https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/Concepts.RegionsAndAvailabilityZones.html)
   * set generated ec2 key pair name
-  * set ec2 instanceType
+  * set instanceClass and size - [EC2 Instance types](https://aws.amazon.com/ec2/instance-types/) - m7a, m7i, c7a, c7i provide the best performance
   * add at least one server
+  * set dataVolumeSizeGB - add enough to fit all game and mod installations and add some head-space. 
   * (optional) add your public IP to whitelist for SSH access
 * Add server configurations to [servers](/servers)
   * IMPORTANT use same serverName in config.yaml and for the directory name under servers
@@ -54,6 +55,18 @@ Contributions welcome, new games are easy to add see [/games/arma-reforger](/gam
 cd aws-infra
 npx projen deploy --all
 ```
+
+## 6. Costs
+Example prices are from us-east-1 region. Cost vary between regions.
+EC2 server costs directly depend on the running hours in month.
+Other costs like Elastic IP and EBS data volume costs accumulate 24/7 as long as the resources exist.
+Below are listed the most significant costs. Other costs apply but are minimal.
+
+### Most significant costs
+
+* Persistent EBS volume fixed cost: $0.08/GB/month, default 30GB disk $2.4/month
+* Public static IP address - Elastic IP fixed cost: $3.6/month
+* EC2 m7a.large	2cpu/8GB RAM costs $0.11592/hour
 
 ## 6. Contributions
 Contributions are welcome
