@@ -1,4 +1,4 @@
-# SteamCDM AWS Dedicated Server - SteamEc2
+# SteamCMD AWS Dedicated Server - SteamEc2
 Do it all project to deploy your own SteamCMD dedicated servers running on top of powerful AWS EC2 instances
 
 ## 1. Features
