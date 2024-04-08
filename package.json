@@ -12,9 +12,6 @@
     "ec2",
     "reforger"
   ],
-  "scripts": {
-    "prepare": "husky install"
-  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/Spaideri/steamcmd-aws-dedicated-server.git"
