@@ -1,0 +1,47 @@
+{
+  "name": "steamcmd-aws-dedicated-server",
+  "version": "1.0.0",
+  "description": "Do it all project to deploy your own SteamCMD dedicated servers running on top of powerful AWS EC2 instances",
+  "author": "Juho Rautio (https://github.com/Spaideri)",
+  "license": "MIT",
+  "keywords": [
+    "steamcmd",
+    "server",
+    "dedicated",
+    "aws",
+    "ec2",
+    "reforger"
+  ],
+  "scripts": {
+    "prepare": "husky install"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Spaideri/steamcmd-aws-dedicated-server.git"
+  },
+  "release": {
+    "branches": [
+      "main"
+    ],
+    "plugins": [
+      "@semantic-release/commit-analyzer",
+      "@semantic-release/release-notes-generator",
+      "@semantic-release/changelog",
+      "@semantic-release/npm",
+      "@semantic-release/git",
+      "@semantic-release/github"
+    ]
+  },
+  "bugs": {
+    "url": "https://github.com/Spaideri/steamcmd-aws-dedicated-server/issues"
+  },
+  "homepage": "https://github.com/Spaideri/steamcmd-aws-dedicated-server",
+  "devDependencies": {
+    "@semantic-release/changelog": "^6.0.3",
+    "@semantic-release/commit-analyzer": "^12.0.0",
+    "@semantic-release/git": "^10.0.1",
+    "@semantic-release/github": "^10.0.3",
+    "@semantic-release/release-notes-generator": "^13.0.0",
+    "semantic-release": "^23.0.7"
+  }
+}

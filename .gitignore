@@ -1,12 +1,8 @@
-# OpenSSL-related files best not committed
-
-
-# CDK
+# CDK / NodeJS
+node_modules
 aws-infra/test/__snapshots__/
 *.swp
 cdk.context.json
-package-lock.json
-yarn.lock
 .cdk.staging
 cdk.out
 
