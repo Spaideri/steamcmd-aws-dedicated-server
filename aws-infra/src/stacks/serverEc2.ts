@@ -22,7 +22,7 @@ import {
   UserData,
   Volume,
 } from 'aws-cdk-lib/aws-ec2';
-import { Effect, PolicyDocument, PolicyStatement, Role, ServicePrincipal } from 'aws-cdk-lib/aws-iam';
+import { Effect, ManagedPolicy, PolicyDocument, PolicyStatement, Role, ServicePrincipal } from 'aws-cdk-lib/aws-iam'
 import { LogGroup, RetentionDays } from 'aws-cdk-lib/aws-logs';
 import { IBucket } from 'aws-cdk-lib/aws-s3';
 import { Construct } from 'constructs';
@@ -174,8 +174,15 @@ export class ServerEc2Stack extends Stack {
 
     const keyPair = KeyPair.fromKeyPairName(this, 'KeyPair', keyPairName);
 
+    const ssmEc2DefaultPolicy = ManagedPolicy.fromManagedPolicyArn(
+      this,
+      'SsmEc2ManagedPolicy',
+      'arn:aws:iam::aws:policy/AmazonSSMManagedEC2InstanceDefaultPolicy'
+    )
+
     const instanceRole = new Role(this, 'InstanceRole', {
       assumedBy: new ServicePrincipal('ec2.amazonaws.com'),
+      managedPolicies: [ ssmEc2DefaultPolicy ],
       inlinePolicies: {
         instancePolicy: new PolicyDocument({
           statements: [
@@ -420,7 +427,7 @@ export class ServerEc2Stack extends Stack {
           InitCommand.shellCommand(`mkdir -p /data/${serverName}/${game} && chown -R ubuntu:ubuntu /data/${serverName}/${game}`, {
             key: '03-game-install-directory',
           }),
-          InitCommand.shellCommand(`runuser -u ubuntu -- python3 /data/${serverName}/steamcmd-init.py ${serverName} ${game}`, {
+          InitCommand.shellCommand(`runuser -u ubuntu -- python3 /data/${serverName}/steamcmd-init.py ${serverName} ${game} ${configurationBucket.bucketName}`, {
             key: '04-steam-cmd-init',
           }),
         ]),
@@ -451,7 +458,7 @@ export class ServerEc2Stack extends Stack {
             mode: '000744',
           }),
           InitService.systemdConfigFile(serverName, {
-            command: `/data/${serverName}/launch-game.py ${serverName} ${game}`,
+            command: `/data/${serverName}/launch-game.py ${serverName} ${game} ${configurationBucket.bucketName}`,
             cwd: `/data/${serverName}/${game}`,
             user: 'ubuntu',
           }),

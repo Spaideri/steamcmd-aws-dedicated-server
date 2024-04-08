@@ -2,19 +2,27 @@
 import json
 import os
 import sys
+import boto3
 
 SERVER_NAME = sys.argv[1]
 GAME_NAME = sys.argv[2]
+CONFIGURATION_BUCKET_NAME = sys.argv[3]
 
 DEFAULT_GAME_ARGUMENTS_FILE_PATH = f"/data/{SERVER_NAME}/default.arguments.json"
 DEFAULT_CONFIG_FILE_PATH = f"/data/{SERVER_NAME}/default.config.json"
 SERVER_GAME_CONFIG_FILE_PATH = f"/data/{SERVER_NAME}/{GAME_NAME}.config.json"
+SERVER_GAME_CONFIG_OBJECT_NAME = f"{SERVER_NAME}/{GAME_NAME}.config.json"
 SERVER_GAME_ARGUMENTS_FILE_PATH = f"/data/{SERVER_NAME}/{GAME_NAME}.arguments.json"
+SERVER_GAME_ARGUMENTS_OBJECT_NAME = f"/data/{SERVER_NAME}/{GAME_NAME}.arguments.json"
 GENERATED_CONFIG_FILE_PATH = f"/data/{SERVER_NAME}/generated.config.json"
 STEAM_FORCE_INSTALL_DIR = f"/data/{SERVER_NAME}/{GAME_NAME}"
 WORKSHOP_DIR = f"/data/{SERVER_NAME}/workshop"
 GAME_BINARY = f"/data/{SERVER_NAME}/{GAME_NAME}/ArmaReforgerServer"
 GAME_PROFILE_DIRECTORY = f"/data/{SERVER_NAME}"
+
+s3 = boto3.client('s3')
+s3.download_file(CONFIGURATION_BUCKET_NAME, SERVER_GAME_CONFIG_OBJECT_NAME, SERVER_GAME_CONFIG_FILE_PATH)
+s3.download_file(CONFIGURATION_BUCKET_NAME, SERVER_GAME_ARGUMENTS_OBJECT_NAME, SERVER_GAME_ARGUMENTS_FILE_PATH)
 
 def load_json_file(path):
     f = open(path)

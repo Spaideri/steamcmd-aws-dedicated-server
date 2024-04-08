@@ -1,10 +1,16 @@
 import json
 import os
 import sys
+import boto3
 
 SERVER_NAME = sys.argv[1]
 GAME_NAME = sys.argv[2]
+CONFIGURATION_BUCKET_NAME = sys.argv[3]
+STEAMCMD_CONFIG_OBJECT_NAME = f"{SERVER_NAME}/steamcmd.config.json"
 STEAMCMD_CONFIG_FILE_PATH = f"/data/{SERVER_NAME}/steamcmd.config.json"
+
+s3 = boto3.client('s3')
+s3.download_file(CONFIGURATION_BUCKET_NAME, STEAMCMD_CONFIG_OBJECT_NAME, STEAMCMD_CONFIG_FILE_PATH)
 
 def load_json_file(path):
     f = open(path)
