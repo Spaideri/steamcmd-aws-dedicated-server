@@ -1,3 +1,4 @@
+.DS_Store
 # CDK / NodeJS
 node_modules
 aws-infra/test/__snapshots__/
