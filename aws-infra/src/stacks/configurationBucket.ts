@@ -1,5 +1,5 @@
 import { RemovalPolicy, Stack, StackProps } from 'aws-cdk-lib';
-import { BlockPublicAccess, Bucket, BucketEncryption, IBucket } from 'aws-cdk-lib/aws-s3';
+import { BlockPublicAccess, Bucket, BucketEncryption, IBucket } from 'aws-cdk-lib/aws-s3'
 import { Construct } from 'constructs';
 
 export class ConfigurationBucketStack extends Stack {

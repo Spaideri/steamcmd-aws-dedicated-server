@@ -22,11 +22,11 @@ import {
   UserData,
   Volume,
 } from 'aws-cdk-lib/aws-ec2';
-import { Effect, ManagedPolicy, PolicyDocument, PolicyStatement, Role, ServicePrincipal } from 'aws-cdk-lib/aws-iam'
 import { LogGroup, RetentionDays } from 'aws-cdk-lib/aws-logs';
 import { IBucket } from 'aws-cdk-lib/aws-s3';
 import { Construct } from 'constructs';
 import { Configuration, ServerConfiguration } from '../types';
+import { getEc2InstanceRole } from '../constructs/iam'
 
 export interface ServerEc2StackProps extends StackProps {
   configuration: Configuration;
@@ -134,7 +134,7 @@ export class ServerEc2Stack extends Stack {
     // Firewall rules for the server
     this.securityGroup = new SecurityGroup(this, 'SecurityGroup', {
       vpc,
-      description: 'Arma Reforger EC2 Server Security Group',
+      description: 'SteamCMD EC2 Server Security Group',
       allowAllOutbound: true,
     });
 
@@ -174,64 +174,8 @@ export class ServerEc2Stack extends Stack {
 
     const keyPair = KeyPair.fromKeyPairName(this, 'KeyPair', keyPairName);
 
-    const ssmEc2DefaultPolicy = ManagedPolicy.fromManagedPolicyArn(
-      this,
-      'SsmEc2ManagedPolicy',
-      'arn:aws:iam::aws:policy/AmazonSSMManagedEC2InstanceDefaultPolicy'
-    )
+    const instanceRole = getEc2InstanceRole(this, 'InstanceRole', serverName);
 
-    const instanceRole = new Role(this, 'InstanceRole', {
-      assumedBy: new ServicePrincipal('ec2.amazonaws.com'),
-      managedPolicies: [ ssmEc2DefaultPolicy ],
-      inlinePolicies: {
-        instancePolicy: new PolicyDocument({
-          statements: [
-            new PolicyStatement({
-              sid: 'EipAssociation',
-              effect: Effect.ALLOW,
-              actions: ['ec2:DescribeAddresses', 'ec2:AllocateAddress', 'ec2:DescribeInstances', 'ec2:AssociateAddress'],
-              resources: ['*'],
-            }),
-            new PolicyStatement({
-              sid: 'DescribeVolumes',
-              effect: Effect.ALLOW,
-              actions: ['ec2:DescribeVolumes'],
-              resources: ['*'],
-            }),
-            // TODO: Do we need CreateSnapshot?
-            new PolicyStatement({
-              sid: 'EC2VolumeOps',
-              effect: Effect.ALLOW,
-              actions: ['ec2:AttachVolume', 'ec2:CreateSnapshot'],
-              resources: [
-                Stack.of(this).formatArn({
-                  service: 'ec2',
-                  resource: 'volume',
-                  resourceName: '*',
-                }),
-              ],
-              conditions: {
-                StringLike: {
-                  'ec2:ResourceTag/name': `${serverName}-*`,
-                },
-              },
-            }),
-            new PolicyStatement({
-              sid: 'CloudWatchMetrics',
-              effect: Effect.ALLOW,
-              actions: ['cloudwatch:PutMetricData'],
-              resources: ['*'],
-            }),
-            new PolicyStatement({
-              sid: 'CfnInit',
-              actions: ['cloudformation:DescribeStackResource', 'cloudformation:SignalResource'],
-              effect: Effect.ALLOW,
-              resources: ['*'],
-            }),
-          ],
-        }),
-      },
-    });
     configurationBucket.grantRead(instanceRole);
     this.authLog.grantWrite(instanceRole);
     this.launchLog.grantWrite(instanceRole);
@@ -270,6 +214,8 @@ export class ServerEc2Stack extends Stack {
     });
     userData.addSignalOnExitCommand(this.autoScalingGroup);
     Tags.of(this.autoScalingGroup).add('autoscaling-group', serverName);
+    Tags.of(this.autoScalingGroup).add('server-name', serverName);
+    Tags.of(this.autoScalingGroup).add('steamec2-service', 'game-server');
 
     const cfnInit = CloudFormationInit.fromConfigSets({
       configSets: {
@@ -427,7 +373,7 @@ export class ServerEc2Stack extends Stack {
           InitCommand.shellCommand(`mkdir -p /data/${serverName}/${game} && chown -R ubuntu:ubuntu /data/${serverName}/${game}`, {
             key: '03-game-install-directory',
           }),
-          InitCommand.shellCommand(`runuser -u ubuntu -- python3 /data/${serverName}/steamcmd-init.py ${serverName} ${game} ${configurationBucket.bucketName}`, {
+          InitCommand.shellCommand(`runuser -u ubuntu -- /data/${serverName}/steamcmd-init.py ${serverName} ${game} ${configurationBucket.bucketName}`, {
             key: '04-steam-cmd-init',
           }),
         ]),
@@ -457,13 +403,14 @@ export class ServerEc2Stack extends Stack {
             owner: 'ubuntu',
             mode: '000744',
           }),
-          InitService.systemdConfigFile(serverName, {
+          InitService.systemdConfigFile('steamcmd-server', {
             command: `/data/${serverName}/launch-game.py ${serverName} ${game} ${configurationBucket.bucketName}`,
             cwd: `/data/${serverName}/${game}`,
             user: 'ubuntu',
+            description: `${game}-service`
           }),
           // Start the server using SystemD
-          InitService.enable(serverName, {
+          InitService.enable('steamcmd-server', {
             serviceManager: ServiceManager.SYSTEMD,
           }),
         ]),
