@@ -1,3 +1,12 @@
+# [1.1.0](https://github.com/Spaideri/steamcmd-aws-dedicated-server/compare/v1.0.0...v1.1.0) (2024-04-09)
+
+
+### Features
+
+* **configs:** automatically restart the game server systemd service when configuration files are updated in the configurations s3 bucket ([6d02ae7](https://github.com/Spaideri/steamcmd-aws-dedicated-server/commit/6d02ae7744a7949b03d8ab397e27c71d030d50dd))
+* **scheduling:** server running hours can be defined in the config ([76f89c7](https://github.com/Spaideri/steamcmd-aws-dedicated-server/commit/76f89c79407db383e99dc651ece899ae55b128fe))
+* **server:** load configuration files from s3 configurations bucket on startup ([6b14794](https://github.com/Spaideri/steamcmd-aws-dedicated-server/commit/6b1479445c3c55e22540033b46f7c359a970133b))
+
 # 1.0.0 (2024-04-08)
 
 
