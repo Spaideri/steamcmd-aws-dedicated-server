@@ -17,9 +17,19 @@ servers:
   - serverName: arma-reforger-server-01
     game: arma-reforger
     dataVolumeSizeGB: 30
-    instanceClass: c7a
-    instanceSize: large
+    instanceClass: m7a
+    instanceSize: medium
     runServer: true
+    # Optional: automatic shutdown schedule, example schedule shuts down the server daily at 3am UTC time
+    # Documentation https://docs.aws.amazon.com/cdk/api/v2/docs/aws-cdk-lib.aws_events.CronOptions.html
+    shutDownSchedule:
+      minute: '0'
+      hour: '3'
+    # Optional: automatic start up schedule, example schedule start the server daily at 4pm UTC time
+    # Only specify if you wish to start your server automatically
+    #startUpSchedule:
+    #  minute: '0'
+    #  hour: '16'
     firewallOpenings:
       - description: Game port
         protocol: udp

@@ -8,9 +8,9 @@ Do it all project to deploy your own SteamCMD dedicated servers running on top o
 * Cost-efficient - only pay for the running hours
 * Persistent storage - game and mods are installed on a persistent disk
 * Runs on Ubuntu Linux - linux EC2 prices are half of the equivalent Windows instances
+* Scheduling - flexibly specify running hours to save cost
 
 ### 1.1 Planned features
-* Scheduling(coming soon) - specify running hours to save cost
 * Discord bot - start/stop and operate the server through a Discord bot
 * Custom CLI - simple CLI to operate servers from local machine
 

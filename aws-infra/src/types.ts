@@ -4,6 +4,15 @@ export enum Game {
   ARMA_REFORGER = 'arma-reforger'
 }
 
+const CronOptionsSchema = z.object({
+  day: z.string().optional(),
+  hour: z.string().optional(),
+  minute: z.string().optional(),
+  month: z.string().optional(),
+  weekDay: z.string().optional(),
+  year: z.string().optional(),
+})
+
 const ServerConfigurationSchema = z.object({
   serverName: z.string().min(2).max(32),
   game: z.nativeEnum(Game),
@@ -11,6 +20,8 @@ const ServerConfigurationSchema = z.object({
   instanceClass: z.string(),
   instanceSize: z.string(),
   runServer: z.boolean(),
+  shutDownSchedule: CronOptionsSchema.optional(),
+  startUpSchedule: CronOptionsSchema.optional(),
   firewallOpenings: z.array(z.object({
     description: z.string(),
     protocol: z.string().regex(/^udp|tcp$/),

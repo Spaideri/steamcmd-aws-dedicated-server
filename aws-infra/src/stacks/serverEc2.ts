@@ -1,5 +1,5 @@
 import { Duration, RemovalPolicy, Size, Stack, StackProps, Tags } from 'aws-cdk-lib';
-import { AutoScalingGroup, HealthCheck, Signals, UpdatePolicy } from 'aws-cdk-lib/aws-autoscaling';
+import { AutoScalingGroup, HealthCheck, Schedule, ScheduledAction, Signals, UpdatePolicy } from 'aws-cdk-lib/aws-autoscaling'
 import {
   CfnEIP,
   CloudFormationInit,
@@ -74,6 +74,8 @@ export class ServerEc2Stack extends Stack {
       instanceSize,
       firewallOpenings,
       runServer,
+      shutDownSchedule,
+      startUpSchedule
     } = serverConfiguration;
 
     const logginOptions = {
@@ -216,6 +218,22 @@ export class ServerEc2Stack extends Stack {
     Tags.of(this.autoScalingGroup).add('autoscaling-group', serverName);
     Tags.of(this.autoScalingGroup).add('server-name', serverName);
     Tags.of(this.autoScalingGroup).add('steamec2-service', 'game-server');
+
+    if (shutDownSchedule) {
+      new ScheduledAction(this, 'ShutDownScheduledAction', {
+        autoScalingGroup: this.autoScalingGroup,
+        desiredCapacity: 0,
+        schedule: Schedule.cron(shutDownSchedule)
+      })
+    }
+
+    if (startUpSchedule) {
+      new ScheduledAction(this, 'StartUpScheduledAction', {
+        autoScalingGroup: this.autoScalingGroup,
+        desiredCapacity: 1,
+        schedule: Schedule.cron(startUpSchedule)
+      })
+    }
 
     const cfnInit = CloudFormationInit.fromConfigSets({
       configSets: {
