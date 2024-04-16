@@ -11,7 +11,7 @@ const CronOptionsSchema = z.object({
   month: z.string().optional(),
   weekDay: z.string().optional(),
   year: z.string().optional(),
-})
+});
 
 const ServerConfigurationSchema = z.object({
   serverName: z.string().min(2).max(32),

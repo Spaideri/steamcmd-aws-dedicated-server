@@ -1,23 +1,23 @@
-import { Construct } from 'constructs'
+import { Stack } from 'aws-cdk-lib';
 import {
   Effect,
   ManagedPolicy, Policy,
   PolicyDocument,
   PolicyStatement,
   Role,
-  ServicePrincipal
-} from 'aws-cdk-lib/aws-iam'
-import { Stack } from 'aws-cdk-lib'
+  ServicePrincipal,
+} from 'aws-cdk-lib/aws-iam';
+import { Construct } from 'constructs';
 
 export const getEc2InstanceRole = (scope: Construct, id: string, serverName: string): Role => {
   const ssmEc2DefaultPolicy = ManagedPolicy.fromManagedPolicyArn(
     scope,
     'SsmEc2ManagedPolicy',
-    'arn:aws:iam::aws:policy/AmazonSSMManagedEC2InstanceDefaultPolicy'
-  )
+    'arn:aws:iam::aws:policy/AmazonSSMManagedEC2InstanceDefaultPolicy',
+  );
   return new Role(scope, id, {
     assumedBy: new ServicePrincipal('ec2.amazonaws.com'),
-    managedPolicies: [ ssmEc2DefaultPolicy ],
+    managedPolicies: [ssmEc2DefaultPolicy],
     inlinePolicies: {
       instancePolicy: new PolicyDocument({
         statements: [
@@ -67,7 +67,7 @@ export const getEc2InstanceRole = (scope: Construct, id: string, serverName: str
       }),
     },
   });
-}
+};
 
 export const getSsmCommandExecutorManagedPolicy = (scope: Construct, id: string): ManagedPolicy => {
   return new ManagedPolicy(scope, id, {
@@ -79,7 +79,7 @@ export const getSsmCommandExecutorManagedPolicy = (scope: Construct, id: string)
         actions: [
           'ssm:SendCommand',
         ],
-        resources: ['arn:aws:ssm:*::document/AWS-RunShellScript']
+        resources: ['arn:aws:ssm:*::document/AWS-RunShellScript'],
       }),
       new PolicyStatement({
         sid: 'SsmRunCommand',
@@ -90,7 +90,7 @@ export const getSsmCommandExecutorManagedPolicy = (scope: Construct, id: string)
         resources: ['arn:aws:ec2:*:*:instance/*'],
         conditions: {
           StringEquals: {
-            'ssm:resourceTag/steamec2-service': 'game-server'
+            'ssm:resourceTag/steamec2-service': 'game-server',
           },
         },
       }),
@@ -100,11 +100,11 @@ export const getSsmCommandExecutorManagedPolicy = (scope: Construct, id: string)
         actions: [
           'ec2:DescribeInstances',
         ],
-        resources: ['*']
-      })
-    ]
-  })
-}
+        resources: ['*'],
+      }),
+    ],
+  });
+};
 
 export const getDiscordAutoScalingHandlerPolicy = (scope: Construct, id: string): Policy => {
   return new Policy(scope, id, {
@@ -113,14 +113,14 @@ export const getDiscordAutoScalingHandlerPolicy = (scope: Construct, id: string)
         sid: 'DescribeAutoscaling',
         effect: Effect.ALLOW,
         actions: ['autoscaling:DescribeAutoScalingGroups'],
-        resources: ['*']
+        resources: ['*'],
       }),
       new PolicyStatement({
         sid: 'UpdateAutoscaling',
         effect: Effect.ALLOW,
         actions: [
           'autoscaling:UpdateAutoScalingGroup',
-          'autoscaling:TerminateInstanceInAutoScalingGroup'
+          'autoscaling:TerminateInstanceInAutoScalingGroup',
         ],
         resources: ['*'],
         conditions: {
@@ -135,8 +135,8 @@ export const getDiscordAutoScalingHandlerPolicy = (scope: Construct, id: string)
         actions: [
           'ec2:DescribeInstances',
         ],
-        resources: ['*']
-      })
-    ]
-  })
-}
+        resources: ['*'],
+      }),
+    ],
+  });
+};

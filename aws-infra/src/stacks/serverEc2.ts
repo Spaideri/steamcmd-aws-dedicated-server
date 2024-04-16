@@ -1,5 +1,5 @@
 import { Duration, RemovalPolicy, Size, Stack, StackProps, Tags } from 'aws-cdk-lib';
-import { AutoScalingGroup, HealthCheck, Schedule, ScheduledAction, Signals, UpdatePolicy } from 'aws-cdk-lib/aws-autoscaling'
+import { AutoScalingGroup, HealthCheck, Schedule, ScheduledAction, Signals, UpdatePolicy } from 'aws-cdk-lib/aws-autoscaling';
 import {
   CfnEIP,
   CloudFormationInit,
@@ -25,8 +25,8 @@ import {
 import { LogGroup, RetentionDays } from 'aws-cdk-lib/aws-logs';
 import { IBucket } from 'aws-cdk-lib/aws-s3';
 import { Construct } from 'constructs';
+import { getEc2InstanceRole } from '../constructs/iam';
 import { Configuration, ServerConfiguration } from '../types';
-import { getEc2InstanceRole } from '../constructs/iam'
 
 export interface ServerEc2StackProps extends StackProps {
   configuration: Configuration;
@@ -74,7 +74,7 @@ export class ServerEc2Stack extends Stack {
       instanceSize,
       firewallOpenings,
       shutDownSchedule,
-      startUpSchedule
+      startUpSchedule,
     } = serverConfiguration;
 
     const logginOptions = {
@@ -221,16 +221,16 @@ export class ServerEc2Stack extends Stack {
       new ScheduledAction(this, 'ShutDownScheduledAction', {
         autoScalingGroup: this.autoScalingGroup,
         desiredCapacity: 0,
-        schedule: Schedule.cron(shutDownSchedule)
-      })
+        schedule: Schedule.cron(shutDownSchedule),
+      });
     }
 
     if (startUpSchedule) {
       new ScheduledAction(this, 'StartUpScheduledAction', {
         autoScalingGroup: this.autoScalingGroup,
         desiredCapacity: 1,
-        schedule: Schedule.cron(startUpSchedule)
-      })
+        schedule: Schedule.cron(startUpSchedule),
+      });
     }
 
     const cfnInit = CloudFormationInit.fromConfigSets({
@@ -423,7 +423,7 @@ export class ServerEc2Stack extends Stack {
             command: `/data/${serverName}/launch-game.py ${serverName} ${game} ${configurationBucket.bucketName}`,
             cwd: `/data/${serverName}/${game}`,
             user: 'ubuntu',
-            description: `${game}-service`
+            description: `${game}-service`,
           }),
           // Start the server using SystemD
           InitService.enable('steamcmd-server', {

@@ -1,13 +1,13 @@
-import { Duration, RemovalPolicy, Stack, StackProps } from 'aws-cdk-lib'
-import { BlockPublicAccess, Bucket, BucketEncryption, EventType, IBucket } from 'aws-cdk-lib/aws-s3'
+import path from 'node:path';
+import { Duration, RemovalPolicy, Stack, StackProps } from 'aws-cdk-lib';
+import { Architecture, Runtime } from 'aws-cdk-lib/aws-lambda';
+import { NodejsFunction } from 'aws-cdk-lib/aws-lambda-nodejs';
+import { RetentionDays } from 'aws-cdk-lib/aws-logs';
+import { BlockPublicAccess, Bucket, BucketEncryption, EventType, IBucket } from 'aws-cdk-lib/aws-s3';
+import { LambdaDestination } from 'aws-cdk-lib/aws-s3-notifications';
 import { Construct } from 'constructs';
-import { NodejsFunction } from 'aws-cdk-lib/aws-lambda-nodejs'
-import path from 'node:path'
-import { RetentionDays } from 'aws-cdk-lib/aws-logs'
-import { Architecture, Runtime } from 'aws-cdk-lib/aws-lambda'
-import { getSsmCommandExecutorManagedPolicy } from '../constructs/iam'
-import { Configuration } from '../types'
-import { LambdaDestination } from 'aws-cdk-lib/aws-s3-notifications'
+import { getSsmCommandExecutorManagedPolicy } from '../constructs/iam';
+import { Configuration } from '../types';
 
 export interface ConfigurationBucketStackProps extends StackProps {
   configuration: Configuration;
@@ -21,7 +21,7 @@ export class ConfigurationBucketStack extends Stack {
   constructor(scope: Construct, id: string, props: ConfigurationBucketStackProps) {
     super(scope, id, props);
 
-    const { configuration } = props
+    const { configuration } = props;
     const { region } = configuration;
 
     this.bucket = new Bucket(this, 'ConfigurationBucket', {
@@ -44,14 +44,14 @@ export class ConfigurationBucketStack extends Stack {
       logRetention: RetentionDays.TWO_WEEKS,
       description: 'Restart game server SystemD service when config files are updated in the s3 bucket',
       timeout: Duration.seconds(10),
-      runtime: Runtime.NODEJS_20_X
-    })
+      runtime: Runtime.NODEJS_20_X,
+    });
 
-    const ssmCommandExecutorPolicy = getSsmCommandExecutorManagedPolicy(this, 'SsmCommandExecutorManagedPolicy')
-    const s3ConfigurationUpdatesRole = this.s3ConfigurationUpdatesLambda.role
+    const ssmCommandExecutorPolicy = getSsmCommandExecutorManagedPolicy(this, 'SsmCommandExecutorManagedPolicy');
+    const s3ConfigurationUpdatesRole = this.s3ConfigurationUpdatesLambda.role;
     if (s3ConfigurationUpdatesRole) {
-      s3ConfigurationUpdatesRole.addManagedPolicy(ssmCommandExecutorPolicy)
+      s3ConfigurationUpdatesRole.addManagedPolicy(ssmCommandExecutorPolicy);
     }
-    this.bucket.addEventNotification(EventType.OBJECT_CREATED_PUT, new LambdaDestination(this.s3ConfigurationUpdatesLambda))
+    this.bucket.addEventNotification(EventType.OBJECT_CREATED_PUT, new LambdaDestination(this.s3ConfigurationUpdatesLambda));
   }
 }
