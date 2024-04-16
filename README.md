@@ -80,3 +80,4 @@ I'm a long time Arma fan and I love the gaming community. Everyone deserves to g
 ## 8. Credits
 * Inspired by [docker-reforger](https://github.com/acemod/docker-reforger/tree/main)
 * EC2 snippets [@jlehtiniemi](https://github.com/jlehtiniemi)
+* Discord bot backend examples from [https://github.com/GEMISIS/discord-bot-cdk-construct](https://github.com/GEMISIS/discord-bot-cdk-construct)
