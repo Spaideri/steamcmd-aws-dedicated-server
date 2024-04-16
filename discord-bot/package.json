@@ -1,0 +1,19 @@
+{
+  "name": "discord-bot",
+  "version": "1.0.0",
+  "description": "Discord bot to control servers",
+  "main": ".build/index.js",
+  "scripts": {
+    "deploy": "tsc && node .build/index.js",
+    "test": "npm test"
+  },
+  "author": "Juho Rautio",
+  "license": "MIT",
+  "devDependencies": {
+    "typescript": "^5.4.5"
+  },
+  "dependencies": {
+    "discord.js": "^14.14.1",
+    "dotenv": "^16.4.5"
+  }
+}

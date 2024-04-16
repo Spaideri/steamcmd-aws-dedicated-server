@@ -3,10 +3,11 @@ Do it all project to deploy your own SteamCMD dedicated servers running on top o
 
 ## 1. Features
 * Public static IP address - join games using the same parameters every time
-* Optimized performance - choose the best instance type from the EC2 catalogue
+* Optimal performance - choose the best instance type from the EC2 catalogue
 * Best latency - deploy the server to the nearest AWS Region to you
 * Cost-efficient - only pay for the running hours
 * Persistent storage - game and mods are installed on a persistent disk
+* Discord bot interface - start/stop/restart servers directly from your Discord server 
 * Runs on Ubuntu Linux - linux EC2 prices are half of the equivalent Windows instances
 * Scheduling - flexibly specify running hours to save cost
 
@@ -22,6 +23,7 @@ Contributions welcome, new games are easy to add see [/games/arma-reforger](/gam
 ## 3. Prerequisites
 * [Create AWS Account](https://docs.aws.amazon.com/accounts/latest/reference/welcome-first-time-user.html)
 * [Create AWS IAM User with AdminAccess](https://docs.aws.amazon.com/singlesignon/latest/userguide/quick-start-default-idc.html)
+* [Install AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html)
 * [Setup AWS CLI Credentials](https://docs.aws.amazon.com/singlesignon/latest/userguide/howtogetcredentials.html)
 * [Install NodeJS](https://nodejs.org/en/download)
 * [Install Packer](https://developer.hashicorp.com/packer/tutorials/docker-get-started/get-started-install-cli)
@@ -41,6 +43,7 @@ Contributions welcome, new games are easy to add see [/games/arma-reforger](/gam
   * IMPORTANT use same serverName in config.yaml and for the directory name under servers
   * modify config files under /servers/your-server-name/
 * Deploy infra from [aws-infra](/aws-infra)
+* Install [Discord bot](/discord-bot) to control your servers
 * Login to AWS Console
   * IMPORTANT! Change region to your specified region from the top right hand corner
   * Open CloudWatch - Logs

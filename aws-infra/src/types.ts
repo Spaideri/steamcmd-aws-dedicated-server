@@ -19,7 +19,6 @@ const ServerConfigurationSchema = z.object({
   dataVolumeSizeGB: z.number().min(1).max(1000),
   instanceClass: z.string(),
   instanceSize: z.string(),
-  runServer: z.boolean(),
   shutDownSchedule: CronOptionsSchema.optional(),
   startUpSchedule: CronOptionsSchema.optional(),
   firewallOpenings: z.array(z.object({

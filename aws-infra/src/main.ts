@@ -4,7 +4,7 @@ import { ServerEc2Stack } from './stacks/serverEc2';
 import { VpcStack } from './stacks/vpc';
 import { ConfigurationSchema } from './types';
 import { parseConfiguration } from './utils/files';
-import { LambdasStack } from './stacks/lambdas'
+import { DiscordApiStack } from './stacks/discordApi'
 
 const configuration = parseConfiguration();
 console.log('CONFIGURATION:', configuration);
@@ -19,11 +19,13 @@ ConfigurationSchema.parse(configuration);
 const app = new App();
 
 const vpcStack = new VpcStack(app, 'SteamCmdVpcStack', { env: cdkEnv });
-const bucketStack = new ConfigurationBucketStack(app, 'SteamCmdConfigurationBucketStack', { env: cdkEnv });
-new LambdasStack(app, 'SteamCmdLambdasStack', {
+const bucketStack = new ConfigurationBucketStack(app, 'SteamCmdConfigurationBucketStack', {
   env: cdkEnv,
-  configuration,
-  configurationBucket: bucketStack.bucket
+  configuration
+});
+new DiscordApiStack(app, 'DiscordApiStack', {
+  env: cdkEnv,
+  configuration
 });
 
 configuration.servers.forEach(serverConfiguration => {

@@ -14,16 +14,7 @@ export const restartGameServiceOnInstanceId = (instanceId: string): Promise<Send
       commands: [
         `sudo systemctl restart steamcmd-server.service && echo $?`,
       ],
-    },
-    /*
-    NotificationConfig: { // NotificationConfig
-      NotificationArn: "STRING_VALUE",
-      NotificationEvents: [ // NotificationEventList
-        "All" || "InProgress" || "Success" || "TimedOut" || "Cancelled" || "Failed",
-      ],
-      NotificationType: "Command" || "Invocation",
-    },
-     */
+    }
   };
   const command = new SendCommandCommand(input);
   return ssmClient.send(command);

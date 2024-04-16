@@ -73,7 +73,6 @@ export class ServerEc2Stack extends Stack {
       instanceClass,
       instanceSize,
       firewallOpenings,
-      runServer,
       shutDownSchedule,
       startUpSchedule
     } = serverConfiguration;
@@ -204,7 +203,6 @@ export class ServerEc2Stack extends Stack {
       launchTemplate: this.launchTemplate,
       cooldown: Duration.minutes(1),
       healthCheck: HealthCheck.ec2({ grace: Duration.minutes(20) }),
-      desiredCapacity: runServer ? 1 : 0,
       maxCapacity: 1,
       minCapacity: 0,
       vpcSubnets: {

@@ -19,7 +19,6 @@ servers:
     dataVolumeSizeGB: 30
     instanceClass: m7a
     instanceSize: medium
-    runServer: true
     # Optional: automatic shutdown schedule, example schedule shuts down the server daily at 3am UTC time
     # Documentation https://docs.aws.amazon.com/cdk/api/v2/docs/aws-cdk-lib.aws_events.CronOptions.html
     shutDownSchedule:

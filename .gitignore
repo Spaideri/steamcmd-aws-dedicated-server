@@ -6,6 +6,7 @@ aws-infra/test/__snapshots__/
 cdk.context.json
 .cdk.staging
 cdk.out
+.build
 
 # IDEs
 .idea

@@ -1,7 +1,7 @@
 import { Construct } from 'constructs'
 import {
   Effect,
-  ManagedPolicy,
+  ManagedPolicy, Policy,
   PolicyDocument,
   PolicyStatement,
   Role,
@@ -91,6 +91,41 @@ export const getSsmCommandExecutorManagedPolicy = (scope: Construct, id: string)
         conditions: {
           StringEquals: {
             'ssm:resourceTag/steamec2-service': 'game-server'
+          },
+        },
+      }),
+      new PolicyStatement({
+        sid: 'FindEc2',
+        effect: Effect.ALLOW,
+        actions: [
+          'ec2:DescribeInstances',
+        ],
+        resources: ['*']
+      })
+    ]
+  })
+}
+
+export const getDiscordAutoScalingHandlerPolicy = (scope: Construct, id: string): Policy => {
+  return new Policy(scope, id, {
+    statements: [
+      new PolicyStatement({
+        sid: 'DescribeAutoscaling',
+        effect: Effect.ALLOW,
+        actions: ['autoscaling:DescribeAutoScalingGroups'],
+        resources: ['*']
+      }),
+      new PolicyStatement({
+        sid: 'UpdateAutoscaling',
+        effect: Effect.ALLOW,
+        actions: [
+          'autoscaling:UpdateAutoScalingGroup',
+          'autoscaling:TerminateInstanceInAutoScalingGroup'
+        ],
+        resources: ['*'],
+        conditions: {
+          StringEquals: {
+            'aws:ResourceTag/steamec2-service': 'game-server',
           },
         },
       }),
