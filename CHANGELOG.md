@@ -1,3 +1,10 @@
+# [1.2.0](https://github.com/Spaideri/steamcmd-aws-dedicated-server/compare/v1.1.0...v1.2.0) (2024-04-16)
+
+
+### Features
+
+* **discord-bot:** initial implemantation of the Discord bot with start/stop/restart commands ([5e1395b](https://github.com/Spaideri/steamcmd-aws-dedicated-server/commit/5e1395ba570479add8400b21e5b7ca0d7e756665))
+
 # [1.1.0](https://github.com/Spaideri/steamcmd-aws-dedicated-server/compare/v1.0.0...v1.1.0) (2024-04-09)
 
 
