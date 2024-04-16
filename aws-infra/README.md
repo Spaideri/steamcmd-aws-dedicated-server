@@ -10,6 +10,12 @@ This project creates all the necessary AWS cloud infra resources required to dep
 ## 1. Initial Setup
 
 #### 1.1 Install dependencies
+`cd lambda`
+
+`npm install`
+
+`cd ..`
+
 `npm install`
 
 `npx projen build`
