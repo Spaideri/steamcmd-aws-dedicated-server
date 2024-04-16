@@ -1,3 +1,10 @@
+## [1.2.1](https://github.com/Spaideri/steamcmd-aws-dedicated-server/compare/v1.2.0...v1.2.1) (2024-04-16)
+
+
+### Bug Fixes
+
+* **aws-infra:** added instructions to run npm install for the lambda sub project ([2208d89](https://github.com/Spaideri/steamcmd-aws-dedicated-server/commit/2208d89c1d9d39f57034285e1858f34a206f19bf))
+
 # [1.2.0](https://github.com/Spaideri/steamcmd-aws-dedicated-server/compare/v1.1.0...v1.2.0) (2024-04-16)
 
 
