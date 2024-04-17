@@ -8,9 +8,11 @@ import { Secret } from 'aws-cdk-lib/aws-secretsmanager';
 import { Construct } from 'constructs';
 import { getDiscordAutoScalingHandlerPolicy } from '../constructs/iam';
 import { Configuration } from '../types';
+import { IBucket } from 'aws-cdk-lib/aws-s3'
 
 export interface DiscordApiStackProps extends StackProps {
   configuration: Configuration;
+  configurationBucket: IBucket;
 }
 
 /**
@@ -20,6 +22,7 @@ export class DiscordApiStack extends Stack {
 
   public readonly discordHandlerLambda: NodejsFunction;
   public readonly discordAutoscalingLambda: NodejsFunction;
+  public readonly discordConfigurationLambda: NodejsFunction;
 
   public readonly discordRestApi: RestApi;
 
@@ -28,7 +31,7 @@ export class DiscordApiStack extends Stack {
   constructor (scope: Construct, id: string, props: DiscordApiStackProps) {
     super(scope, id, props);
 
-    const { configuration } = props;
+    const { configuration, configurationBucket } = props;
 
     this.discordAPISecrets = new Secret(this, 'discord-bot-api-key', {
       secretName: 'discord-bot-secrets',
@@ -49,6 +52,24 @@ export class DiscordApiStack extends Stack {
       runtime: Runtime.NODEJS_20_X,
     });
 
+    this.discordConfigurationLambda = new NodejsFunction(this, 'DiscordConfigurationLambda', {
+      architecture: Architecture.ARM_64,
+      environment: {
+        REGION: configuration.region,
+        DISCORD_BOT_SECRETS_NAME: this.discordAPISecrets.secretName,
+        CONFIGURATION_BUCKET_NAME: configurationBucket.bucketName
+      },
+      memorySize: 512,
+      depsLockFilePath: path.join(__dirname, '../../lambda/package-lock.json'),
+      entry: path.join(__dirname, '../../lambda/src/discord/configuration-handler.ts'),
+      logRetention: RetentionDays.TWO_WEEKS,
+      description: 'Discord configuration handler',
+      timeout: Duration.seconds(300),
+      runtime: Runtime.NODEJS_20_X,
+    });
+
+    this.discordConfigurationLambda.role && configurationBucket.grantReadWrite(this.discordConfigurationLambda.role)
+
     const autoScalingHandlerPolicy = getDiscordAutoScalingHandlerPolicy(this, 'DiscordAutoscalingLambdaPolicy');
 
     this.discordAutoscalingLambda.role?.attachInlinePolicy(autoScalingHandlerPolicy);
@@ -59,6 +80,7 @@ export class DiscordApiStack extends Stack {
         REGION: configuration.region,
         DISCORD_BOT_SECRETS_NAME: this.discordAPISecrets.secretName,
         DISCORD_AUTOSCALING_LAMBDA_ARN: this.discordAutoscalingLambda.functionArn,
+        DISCORD_CONFIGURATION_LAMBDA_ARN: this.discordConfigurationLambda.functionArn
       },
       memorySize: 512,
       depsLockFilePath: path.join(__dirname, '../../lambda/package-lock.json'),
@@ -70,10 +92,11 @@ export class DiscordApiStack extends Stack {
     });
 
     this.discordAPISecrets.grantRead(this.discordHandlerLambda);
+    //
     this.discordAPISecrets.grantRead(this.discordAutoscalingLambda);
+    this.discordAPISecrets.grantRead(this.discordConfigurationLambda);
     this.discordAutoscalingLambda.grantInvoke(this.discordHandlerLambda);
-
-    this.discordAPISecrets.grantRead(this.discordHandlerLambda);
+    this.discordConfigurationLambda.grantInvoke(this.discordHandlerLambda);
 
     const discordApiAccessLogGroup = new LogGroup(this, 'AccessLogs', {
       logGroupName: '/api-gateway/discord-api/access-logs',

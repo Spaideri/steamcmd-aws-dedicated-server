@@ -14,8 +14,8 @@ sshIpAddressWhitelist:
   - 127.0.0.1
 
 servers:
-  - serverName: arma-reforger-server-01
-    game: arma-reforger
+  - serverName: reforger-server-01
+    game: reforger
     dataVolumeSizeGB: 30
     instanceClass: m7a
     instanceSize: medium

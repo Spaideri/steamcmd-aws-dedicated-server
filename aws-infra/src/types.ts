@@ -1,7 +1,7 @@
 import { z } from 'zod';
 
 export enum Game {
-  ARMA_REFORGER = 'arma-reforger'
+  REFORGER = 'reforger'
 }
 
 const CronOptionsSchema = z.object({

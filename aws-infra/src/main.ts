@@ -26,6 +26,7 @@ const bucketStack = new ConfigurationBucketStack(app, 'SteamCmdConfigurationBuck
 new DiscordApiStack(app, 'DiscordApiStack', {
   env: cdkEnv,
   configuration,
+  configurationBucket: bucketStack.bucket,
 });
 
 configuration.servers.forEach(serverConfiguration => {

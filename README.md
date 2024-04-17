@@ -16,7 +16,7 @@ Do it all project to deploy your own SteamCMD dedicated servers running on top o
 * Custom CLI - simple CLI to operate servers from local machine
 
 ## 2. Supported Games
-Contributions welcome, new games are easy to add see [/games/arma-reforger](/games/arma-reforger) for example
+Contributions welcome, new games are easy to add see [/games/reforger](/games/reforger) for example
 * Arma Reforger
 * Arma3 (coming soon)
 
@@ -41,23 +41,26 @@ Contributions welcome, new games are easy to add see [/games/arma-reforger](/gam
   * (optional) add your public IP to whitelist for SSH access
 * Add server configurations to [servers](/servers)
   * IMPORTANT use same serverName in config.yaml and for the directory name under servers
-  * modify config files under /servers/your-server-name/
+  * server name MUST start with a game name prefix, like `reforger-{name of my server}`
+  * modify config files under /servers/gamename-server-name/
 * Deploy infra from [aws-infra](/aws-infra)
+
 * Install [Discord bot](/discord-bot) to control your servers
 * Login to AWS Console
   * IMPORTANT! Change region to your specified region from the top right hand corner
-  * Open CloudWatch - Logs
-  * See server sys.log to see server output
+  * Open S3 console and find configuration bucket named like `steamcmdconfigurationbuck-configurationbucketxxxyyy-xxxyyyzzz` record the name
+  * Upload the initial server configuration files to the configurations s3 bucket
+    * in the project root run
+    * `aws s3 sync servers/ s3://BUCKET_NAME_FROM_THE_STEP_ABOVE}/ --delete --storage-class REDUCED_REDUNDANCY --region eu-north-1` 
+* Run Discord bot command `/steamec2 start server:reforger-server-01` on your Discord server to start your server
+* Open CloudWatch - Logs
+* See server sys.log to see server output
+* The first time startup can take tens of minutes when the game and mods are being installed
 
 ## 5. Operating
 
 ### 5.1 Start/Stop server
-* set [runServer](https://github.com/Spaideri/steamcmd-aws-dedicated-server/blob/main/config.yaml#L22) to `true` or `false`
-
-```
-cd aws-infra
-npx projen deploy --all
-```
+* See [Discord bot](/discord-bot) for commands
 
 ## 6. Costs
 Example prices are from us-east-1 region. Cost vary between regions.

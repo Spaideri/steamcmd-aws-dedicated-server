@@ -1,28 +1,11 @@
 import { IDiscordEventRequest, ScalingAction, ScalingCommand, SubCommandL1 } from './types'
-import { getDiscordSecrets } from './secrets'
-import { sendFollowupMessage } from './discord-client'
 import {
   findAutoscalingGroupByServerName,
   terminateInstanceById,
   updateDesiredCapacity
 } from '../utils/autoscaling-client'
 import { getRunningInstanceIdByServerName } from '../utils/ec2-client'
-
-const respond = async (event: IDiscordEventRequest, responseContent: string): Promise<void> => {
-  const discordSecret = await getDiscordSecrets();
-  const endpointInfo = {
-    authToken: discordSecret?.authToken,
-    applicationId: discordSecret?.applicationId,
-    botToken: discordSecret?.botToken
-  };
-  const response = {
-    tts: false,
-    content: responseContent,
-    embeds: [],
-    allowedMentions: {},
-  };
-  return sendFollowupMessage(endpointInfo, event.jsonBody.token, response)
-}
+import { respond } from './utils'
 
 export const handler = async (event: IDiscordEventRequest): Promise<string> => {
   try {
@@ -39,20 +22,20 @@ export const handler = async (event: IDiscordEventRequest): Promise<string> => {
     switch (scalingCommand.name) {
       case ScalingAction.START:
         if (autoScalingGroup.DesiredCapacity === 1) {
-          await respond(event, `Server ${serverName} desired state is already running.\n Instances: \n` + instancesListString)
+          await respond(event, `:warning: Server ${serverName} desired state is already running.\n Instances: \n` + instancesListString)
         } else {
           await updateDesiredCapacity(autoScalingGroup.AutoScalingGroupName, 1)
-          await respond(event, `Successfully set ${serverName} desired state to running`)
+          await respond(event, `:white_check_mark: Successfully set ${serverName} desired state to running`)
         }
         break;
       case ScalingAction.STOP:
         await updateDesiredCapacity(autoScalingGroup.AutoScalingGroupName, 0)
-        await respond(event, `Successfully set ${serverName} desired state to terminated`)
+        await respond(event, `:octagonal_sign: Successfully set ${serverName} desired state to terminated`)
         break;
       case ScalingAction.RESTART:
         const runningInstanceId = await getRunningInstanceIdByServerName(serverName);
         await terminateInstanceById(runningInstanceId)
-        await respond(event, `Terminating ${serverName} running instanceId: ${runningInstanceId}. Autoscaling starting a new instance in few minutes`)
+        await respond(event, `:recycle: Terminating ${serverName} running instanceId: ${runningInstanceId}. Autoscaling starting a new instance in few minutes`)
         break;
     }
     return '200';

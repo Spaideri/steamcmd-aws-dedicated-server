@@ -15,6 +15,12 @@ export enum ScalingAction {
   RESTART = 'restart'
 }
 
+export enum ConfigurationAction {
+  UPDATE = 'update',
+  VIEW = 'view',
+  VIEW_DEFAULTS = 'view-defaults'
+}
+
 export interface ServerOption {
   name: 'server'
   type: 3
@@ -89,6 +95,20 @@ export interface IDiscordJsonBody {
   version: number;
 }
 
+export interface IDiscordRequestDataResolvedAttachment {
+  content_type: string
+  ephemeral: boolean
+  filename: string
+  id: string
+  proxy_url: string
+  size: number
+  url: string
+}
+
+export interface IDiscordRequestDataResolved {
+  attachments: Record<string, IDiscordRequestDataResolvedAttachment>
+}
+
 /**
  * The data in the Discord request. Should be handled for actually parsing commands.
  */
@@ -99,6 +119,7 @@ export interface IDiscordRequestData {
   options?: IDiscordRequestDataOption[];
   guildId?: string;
   targetId?: string;
+  resolved?: IDiscordRequestDataResolved
 }
 
 /**

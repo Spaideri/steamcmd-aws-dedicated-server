@@ -28,4 +28,19 @@ Replace 123456789012 with your AWS account Id and eu-north-1 with the region you
 ## 2. Deployment command
 
 ### 2.1 Deploy CDK project
-`npx projen deploy --all`
+`npx cdk deploy --all --require-approval never`
+
+## 3. Destroy everything
+
+### 3.1 AWS console 
+* Sing in to the AWS console
+* Navigate to S3 service
+* Find the configuration bucket named something like `steamcmdconfigurationbuck-configurationbucketxxx123-xxyyzzz`
+* Open the bucket and delete all the files in the bucket
+* Navigate to EC2 service in the console
+* Open "AMIs" from the left navigation
+* Deregister AMIs with name `steamcmd-ubuntu-server`
+
+### 3.2 CDK project
+* Open CLI and navigate to the `aws-infra` directory
+* Run `npx cdk destroy --all`

@@ -5,17 +5,22 @@
 ### 1.1 start
 Starts your game server
 
-`/steamec2 start server:arma-reforger-server-01`
+`/steamec2 start server:reforger-server-01`
 
 ### 1.2 stop
 Stops and terminates your game server instance
 
-`/steamec2 stop server:arma-reforger-server-01`
+`/steamec2 stop server:reforger-server-01`
 
 ### 1.3 restart
 Terminates the running game server instance and lets autoscaling to start a new instance 
 
-`/steamec2 restart server:arma-reforger-server-01`
+`/steamec2 restart server:reforger-server-01`
+
+### 1.4 configuration update
+Upload new configuration file and the game server service will restart with your updated configurations
+
+`/steamec2 configuration update server:reforger-server-01 config-file: reforger.config.json`
 
 ## 2. Install instructions
 
