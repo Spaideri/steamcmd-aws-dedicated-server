@@ -1,3 +1,10 @@
+# [1.3.0](https://github.com/Spaideri/steamcmd-aws-dedicated-server/compare/v1.2.1...v1.3.0) (2024-04-17)
+
+
+### Features
+
+* **discord-bot:** configuration updates through discord bot file uploads ([991dc6c](https://github.com/Spaideri/steamcmd-aws-dedicated-server/commit/991dc6c4ddb9959b2daa6d904bacd3798a6c60e8))
+
 ## [1.2.1](https://github.com/Spaideri/steamcmd-aws-dedicated-server/compare/v1.2.0...v1.2.1) (2024-04-16)
 
 
