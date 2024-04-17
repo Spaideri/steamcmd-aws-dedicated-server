@@ -1,4 +1,9 @@
+# macOS
 .DS_Store
+
+# Discord bot secrets
+.env
+
 # CDK / NodeJS
 node_modules
 aws-infra/test/__snapshots__/
