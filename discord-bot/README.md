@@ -74,7 +74,7 @@ aws secretsmanager put-secret-value \
 * Copy and paste the above command formatted with your ID's to the console and run the command
 
 ### 2.3 Invite the bot to your channel
-* Copy and paste the OAuth2 "GENERATED URL" from the previous step to your Discord server channel to invite the bot
+* Copy and paste the OAuth2 "GENERATED URL" from the previous step to a new browser tab to invite the bot
 
 ### 2.4 Deploy the discord bot commands
 * Create new file `.env` to the root of the `disccord-bot` directory with the below content with secrets from the previous step
