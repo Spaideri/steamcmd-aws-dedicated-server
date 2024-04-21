@@ -1,6 +1,7 @@
 import { Duration, RemovalPolicy, Size, Stack, StackProps, Tags } from 'aws-cdk-lib';
 import { AutoScalingGroup, HealthCheck, Schedule, ScheduledAction, Signals, UpdatePolicy } from 'aws-cdk-lib/aws-autoscaling';
 import {
+  BlockDeviceVolume,
   CfnEIP,
   CloudFormationInit,
   EbsDeviceVolumeType,
@@ -73,6 +74,7 @@ export class ServerEc2Stack extends Stack {
       instanceClass,
       instanceSize,
       firewallOpenings,
+      rootVolumeSizeGB,
       shutDownSchedule,
       startUpSchedule,
     } = serverConfiguration;
@@ -189,6 +191,17 @@ export class ServerEc2Stack extends Stack {
     this.launchTemplate = new LaunchTemplate(this, 'LaunchTemplate', {
       machineImage,
       userData,
+      blockDevices: [
+        // Root volume
+        {
+          deviceName: '/dev/sda1',
+          volume: BlockDeviceVolume.ebs(rootVolumeSizeGB, {
+            deleteOnTermination: true,
+            encrypted: true,
+            volumeType: EbsDeviceVolumeType.GP3,
+          }),
+        },
+      ],
       associatePublicIpAddress: true,
       requireImdsv2: true,
       securityGroup: this.securityGroup,

@@ -14,9 +14,10 @@ sshIpAddressWhitelist:
   - 127.0.0.1
 
 servers:
-  - serverName: reforger-server-01
+  - serverName: reforger-server-01 # serverName must match the directory name in the servers/ directory
     game: reforger
-    dataVolumeSizeGB: 30
+    rootVolumeSizeGB: 15 # Temporary disk terminated on every time instance is stopped
+    dataVolumeSizeGB: 30 # Permanent disk for game install files
     instanceClass: m7a
     instanceSize: medium
     # Optional: automatic shutdown schedule, example schedule shuts down the server daily at 3am UTC time
