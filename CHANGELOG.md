@@ -1,3 +1,11 @@
+# [1.4.0](https://github.com/Spaideri/steamcmd-aws-dedicated-server/compare/v1.3.0...v1.4.0) (2024-04-28)
+
+
+### Features
+
+* **discord:** discord bot posts notification messages of the server state changes ([aef7f14](https://github.com/Spaideri/steamcmd-aws-dedicated-server/commit/aef7f1454f7127cc7ceb360ef347a1ba609554fd))
+* **ec2:** root volume size configurable ([1183ec6](https://github.com/Spaideri/steamcmd-aws-dedicated-server/commit/1183ec6e0d3174d2f0e613b0fd76a7f0eaee8668))
+
 # [1.3.0](https://github.com/Spaideri/steamcmd-aws-dedicated-server/compare/v1.2.1...v1.3.0) (2024-04-17)
 
 
