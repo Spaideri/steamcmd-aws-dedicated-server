@@ -1,4 +1,4 @@
-import { IDiscordEventRequest, ScalingAction, ScalingCommand, SubCommandL1 } from './types'
+import { IDiscordEventRequest, ScalingAction, ScalingCommand } from './types'
 import {
   findAutoscalingGroupByServerName,
   terminateInstanceById,
@@ -25,7 +25,7 @@ export const handler = async (event: IDiscordEventRequest): Promise<string> => {
           await respond(event, `:warning: Server ${serverName} desired state is already running.\n Instances: \n` + instancesListString)
         } else {
           await updateDesiredCapacity(autoScalingGroup.AutoScalingGroupName, 1)
-          await respond(event, `:white_check_mark: Successfully set ${serverName} desired state to running`)
+          await respond(event, `:arrow_forward: Successfully set ${serverName} desired state to running`)
         }
         break;
       case ScalingAction.STOP:

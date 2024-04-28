@@ -37,7 +37,8 @@ Contributions welcome, new games are easy to add see [/games/reforger](/games/re
   * set generated ec2 key pair name
   * set instanceClass and size - [EC2 Instance types](https://aws.amazon.com/ec2/instance-types/) - m7a, m7i, c7a, c7i provide the best performance
   * add at least one server
-  * set dataVolumeSizeGB - add enough to fit all game and mod installations and add some head-space. 
+  * set dataVolumeSizeGB - add enough to fit all game and mod installations and add some head-space.
+  * set discordBot serverMessagesChannelId - Discord bot posts server notifications to this channel, it's recommended to create a new private channel to avoid spamming general channels
   * (optional) add your public IP to whitelist for SSH access
 * Add server configurations to [servers](/servers)
   * IMPORTANT use same serverName in config.yaml and for the directory name under servers

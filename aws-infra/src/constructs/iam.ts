@@ -140,3 +140,16 @@ export const getDiscordAutoScalingHandlerPolicy = (scope: Construct, id: string)
     ],
   });
 };
+
+export const getSysLogHandlerPolicy = (scope: Construct, id: string): Policy => {
+  return new Policy(scope, id, {
+    statements: [
+      new PolicyStatement({
+        sid: 'PutMetricsData',
+        effect: Effect.ALLOW,
+        actions: ['cloudwatch:putMetricData'],
+        resources: ['*'],
+      }),
+    ],
+  });
+};

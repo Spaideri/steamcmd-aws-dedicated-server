@@ -12,6 +12,9 @@ keyPairName: steamcmd-eu-north-1
 # Replace 127.0.0.1 with your own public IP
 sshIpAddressWhitelist:
   - 127.0.0.1
+discordBot:
+  serverMessagesChannelId: '' # Channel ID on your Discrod server where bot is posting status messages
+  adminGlobalNames:
 
 servers:
   - serverName: reforger-server-01 # serverName must match the directory name in the servers/ directory

@@ -45,6 +45,27 @@ export interface IDiscordSecrets {
   botToken: string;
 }
 
+export interface CloudWatchAlarmMessage {
+  AlarmName: string
+  AlarmDescription?: string
+  NewStateValue: string
+  NewStateReason: string
+  StateChangeTime: string
+  OldStateValue: string
+}
+
+export interface AutoScalingMessage {
+  Origin: 'EC2'
+  Description: string
+  EndTime: string
+  AutoScalingGroupARN: string
+  StartTime: string
+  Service: 'AWS Auto Scaling'
+  Time: string
+  EC2InstanceId: string
+  StatusCode: string
+}
+
 /**
  * A server role assigned to a user.
  */

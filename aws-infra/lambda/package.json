@@ -19,6 +19,7 @@
   "dependencies": {
     "@aws-sdk/client-auto-scaling": "^3.552.0",
     "@aws-sdk/client-ec2": "^3.552.0",
+    "@aws-sdk/client-cloudwatch": "^3.552.0",
     "@aws-sdk/client-lambda": "^3.552.0",
     "@aws-sdk/client-s3": "^3.552.0",
     "@aws-sdk/client-secrets-manager": "^3.552.0",
@@ -26,6 +27,7 @@
     "@aws-sdk/client-ssm": "^3.552.0",
     "axios": "^1.6.8",
     "tweetnacl": "^1.0.3",
+    "zlib": "^1.0.5",
     "zod": "^3.22.4"
   }
 }

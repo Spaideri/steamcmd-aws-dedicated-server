@@ -3,7 +3,7 @@ import { ConfigurationAction, IDiscordEventRequest, IDiscordRequestDataResolvedA
 import { downloadFile, respond } from './utils'
 import { putServerConfigurationFile } from '../utils/s3-client'
 import { readFileSync } from 'fs'
-import { ReforgerConfigurationFileSchemas } from './games/reforger/validation-schemas'
+import { ReforgerConfigurationFileSchemas } from '../games/reforger/validation-schemas'
 
 const GameValidationSchemas = {
   'reforger': ReforgerConfigurationFileSchemas

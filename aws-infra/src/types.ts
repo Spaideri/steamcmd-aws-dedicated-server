@@ -34,6 +34,10 @@ export type ServerConfiguration = z.infer<typeof ServerConfigurationSchema>
 export const ConfigurationSchema = z.object({
   accountId: z.string(),
   amiName: z.string(),
+  discordBot: z.object({
+    adminGlobalNames: z.array(z.string()).min(1),
+    serverMessagesChannelId: z.string(),
+  }),
   region: z.string(),
   keyPairName: z.string(),
   sshIpAddressWhitelist: z.array(z.string()),

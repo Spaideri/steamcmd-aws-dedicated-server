@@ -1,5 +1,6 @@
 import { z } from 'zod'
 
+export const fpsLogMessagePattern = /^.*(FPS\: )(\d+).*$/
 
 const ipAddress = z.string().regex(/^((25[0-5]|(2[0-4]|1\d|[1-9]|)\d)\.?\b){4}$/).optional()
 const port = z.string().min(1024).max(65535).optional()
@@ -13,6 +14,7 @@ export const ReforgerArgumentsSchema = z.object({
   backendlog: z.string().regex(/^-backendlog$/).optional(),
   maxFPS: z.string().regex(/^-maxFPS [1-9]\d*$/).optional(),
   nothrow: z.string().regex(/^-nothrow$/).optional(),
+  logLevel: z.string().regex(/^-logLevel (normal|warning|error|fatal)$/).optional(),
 });
 export type ReforgerArguments = z.infer<typeof ReforgerArgumentsSchema>
 export const SteamCmdConfigSchema = z.object({
@@ -41,7 +43,7 @@ export const ReforgerConfigSchema = z.object({
     permission: z.string().optional(),
     blacklist: z.array(z.string()).optional(),
     whitelist: z.array(z.string()).optional(),
-  }),
+  }).optional(),
   game: z.object({
     name: z.string().min(0).max(100).optional(),
     password: z.string().min(0).max(100).optional(),

@@ -43,7 +43,9 @@ export const updateDesiredCapacity = async (autoScalingGroupName: string, desire
   const input = {
     AutoScalingGroupName: autoScalingGroupName,
     DesiredCapacity: desiredCapacity,
-    NewInstancesProtectedFromScaleIn: false
+    NewInstancesProtectedFromScaleIn: false,
+    MinSize: 0,
+    MaxSize: 1
   };
 
   const command = new UpdateAutoScalingGroupCommand(input)

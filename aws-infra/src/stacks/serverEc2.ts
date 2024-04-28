@@ -1,5 +1,15 @@
+import path from 'node:path';
 import { Duration, RemovalPolicy, Size, Stack, StackProps, Tags } from 'aws-cdk-lib';
-import { AutoScalingGroup, HealthCheck, Schedule, ScheduledAction, Signals, UpdatePolicy } from 'aws-cdk-lib/aws-autoscaling';
+import {
+  AutoScalingGroup,
+  HealthCheck, ScalingEvents,
+  Schedule,
+  ScheduledAction,
+  Signals,
+  UpdatePolicy,
+} from 'aws-cdk-lib/aws-autoscaling';
+import { Alarm, ComparisonOperator, Metric, TreatMissingData } from 'aws-cdk-lib/aws-cloudwatch';
+import * as cw_actions from 'aws-cdk-lib/aws-cloudwatch-actions';
 import {
   BlockDeviceVolume,
   CfnEIP,
@@ -7,7 +17,8 @@ import {
   EbsDeviceVolumeType,
   InitCommand,
   InitConfig,
-  InitFile, InitService,
+  InitFile,
+  InitService,
   InstanceClass,
   InstanceInitiatedShutdownBehavior,
   InstanceSize,
@@ -18,15 +29,20 @@ import {
   MachineImage,
   Peer,
   Port,
-  SecurityGroup, ServiceManager,
+  SecurityGroup,
+  ServiceManager,
   SubnetType,
   UserData,
   Volume,
 } from 'aws-cdk-lib/aws-ec2';
-import { LogGroup, RetentionDays } from 'aws-cdk-lib/aws-logs';
+import { Architecture, Runtime } from 'aws-cdk-lib/aws-lambda';
+import { NodejsFunction } from 'aws-cdk-lib/aws-lambda-nodejs';
+import { FilterPattern, LogGroup, RetentionDays } from 'aws-cdk-lib/aws-logs';
+import * as destinations from 'aws-cdk-lib/aws-logs-destinations';
 import { IBucket } from 'aws-cdk-lib/aws-s3';
+import { ITopic } from 'aws-cdk-lib/aws-sns';
 import { Construct } from 'constructs';
-import { getEc2InstanceRole } from '../constructs/iam';
+import { getEc2InstanceRole, getSysLogHandlerPolicy } from '../constructs/iam';
 import { Configuration, ServerConfiguration } from '../types';
 
 export interface ServerEc2StackProps extends StackProps {
@@ -34,6 +50,7 @@ export interface ServerEc2StackProps extends StackProps {
   serverConfiguration: ServerConfiguration;
   vpc: IVpc;
   configurationBucket: IBucket;
+  discordTopic: ITopic;
 }
 
 export class ServerEc2Stack extends Stack {
@@ -51,6 +68,9 @@ export class ServerEc2Stack extends Stack {
   private cloudwatchAgentLog: LogGroup;
   private sysLog: LogGroup;
 
+  private sysLogProcessor: NodejsFunction;
+  private serverRunningAlarm: Alarm;
+
   constructor(scope: Construct, id: string, props: ServerEc2StackProps) {
     super(scope, id, props);
 
@@ -59,6 +79,7 @@ export class ServerEc2Stack extends Stack {
       configurationBucket,
       vpc,
       serverConfiguration,
+      discordTopic,
     } = props;
 
     const {
@@ -110,6 +131,50 @@ export class ServerEc2Stack extends Stack {
       ...logginOptions,
       logGroupName: logGroupNames.sysLog,
     });
+
+    this.sysLogProcessor = new NodejsFunction(this, 'SysLogProcessorLambda', {
+      architecture: Architecture.ARM_64,
+      environment: {
+        GAME: game,
+        REGION: configuration.region,
+        SERVER_NAME: serverName,
+      },
+      memorySize: 512,
+      depsLockFilePath: path.join(__dirname, '../../lambda/package-lock.json'),
+      entry: path.join(__dirname, '../../lambda/src/server-sys-log-processor.ts'),
+      logRetention: RetentionDays.TWO_WEEKS,
+      description: 'Server sys log processor',
+      timeout: Duration.seconds(3),
+      runtime: Runtime.NODEJS_20_X,
+    });
+
+    this.sysLogProcessor.role?.attachInlinePolicy(getSysLogHandlerPolicy(this, 'SysLogHandlerPolicy'));
+
+    this.sysLog.addSubscriptionFilter('ServerSysLogFilter', {
+      destination: new destinations.LambdaDestination((this.sysLogProcessor)),
+      filterName: `${serverName}-SysLogSubscriptionFilter`,
+      filterPattern: FilterPattern.literal('%launch-game.py%'),
+    });
+
+    const minFpsMetric = new Metric({
+      metricName: 'minFps',
+      namespace: serverName,
+      statistic: 'Minimum',
+      label: `${serverName}-minFps`,
+    });
+
+    this.serverRunningAlarm = new Alarm(this, 'ServerRunningAlarm', {
+      comparisonOperator: ComparisonOperator.LESS_THAN_THRESHOLD,
+      threshold: 1,
+      evaluationPeriods: 1,
+      metric: minFpsMetric,
+      treatMissingData: TreatMissingData.NOT_BREACHING,
+    });
+
+    this.serverRunningAlarm.applyRemovalPolicy(RemovalPolicy.DESTROY);
+
+    this.serverRunningAlarm.addAlarmAction(new cw_actions.SnsAction(discordTopic));
+    this.serverRunningAlarm.addOkAction(new cw_actions.SnsAction(discordTopic));
 
     const INIT_BASE = '/opt/ec2/cfn-scripts'; // CFN-INIT resources location on the instance
     const LOCAL_CFN_INIT_FILES_BASE = `${__dirname}/cfn-init`;
@@ -222,6 +287,12 @@ export class ServerEc2Stack extends Stack {
         availabilityZones: [`${region}a`],
         subnetType: SubnetType.PUBLIC,
       },
+      notifications: [
+        {
+          topic: discordTopic,
+          scalingEvents: ScalingEvents.ALL,
+        },
+      ],
       signals: Signals.waitForAll({ minSuccessPercentage: 0, timeout: Duration.minutes(20) }),
       updatePolicy: UpdatePolicy.rollingUpdate({}),
     });

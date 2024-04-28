@@ -17,11 +17,31 @@ export const sendFollowupMessage = (
     allowed_mentions: allowedMentions,
   };
 
-  console.log('data', JSON.stringify(data))
-
   const url = `https://discord.com/api/v${
     endpointInfo.apiVersion ?? '10'
   }/webhooks/${endpointInfo.applicationId}/${interactionToken}`;
+
+  return axios.post(url, data, authConfig)
+    .catch((e: AxiosError) => {
+      console.error(e.message, JSON.stringify(e.response.data))
+    });
+}
+
+export const sendChannelMessage = (
+  endpointInfo: IDiscordEndpointInfo,
+  channelId: string,
+  message: string
+): Promise<any> => {
+  const authConfig = {
+    headers: {
+      'Authorization': `Bot ${endpointInfo.botToken}`,
+    },
+  };
+  const data = { content: message };
+
+  const url = `https://discord.com/api/v${
+    endpointInfo.apiVersion ?? '10'
+  }/channels/${channelId}/messages`;
 
   return axios.post(url, data, authConfig)
     .catch((e: AxiosError) => {
